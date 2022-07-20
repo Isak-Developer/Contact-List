@@ -22,6 +22,17 @@ class UI {
     }, 3000);
   }
 
+  // Local storege 
+  class UI{
+    static displayContacts(){
+      const contacts= Store.getContacts();
+      // console.log("line ka 21", contacts);
+      contacts.forEach(function(contact){
+        UI.addContactToList(contact);
+      })
+    }
+  }
+// Local storege 
   static addContactToList(contact) {
     const list = document.querySelector("#contact-list");
     const row = document.createElement("tr");
@@ -68,3 +79,28 @@ document.querySelector("#contact-list").addEventListener("click", (e) => {
   UI.deleteContact(e.target);
   UI.ShowAlert("Contact Deleted", "success");
 });
+
+// Local storege 
+
+class Store {
+  static getContacts(){
+    let contacts;
+
+    if (localStorage.getItem("contacts")===null){
+      contacts=[];
+    } else{
+      contacts=JSON.parse(localStorage.getItem('contacts'));
+
+    }
+    return contacts;
+  }
+  static addContact(contact){
+    const contacts =Store.getContacts();
+    contacts.push(contact);
+    localStorage.setItem("contacts",JSON.stringify(contact));
+  }
+}
+
+document.addEventListener("DOMContentLoaded",UI.displayContacts);
+
+// Local storege 
