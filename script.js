@@ -21,18 +21,13 @@ class UI {
       document.querySelector(".alert").remove();
     }, 3000);
   }
-
-  // Local storege 
-  class UI{
-    static displayContacts(){
-      const contacts= Store.getContacts();
-      // console.log("line ka 21", contacts);
-      contacts.forEach(function(contact){
-        UI.addContactToList(contact);
-      })
-    }
+  static displayContacts(){
+    const contacts= Store.getContacts();
+    contacts.forEach ( (contact) => {
+      UI.addContactToList(contact);
+    });
   }
-// Local storege 
+
   static addContactToList(contact) {
     const list = document.querySelector("#contact-list");
     const row = document.createElement("tr");
@@ -59,6 +54,28 @@ class UI {
   }
 }
 
+class Store {
+  static getContacts(){
+    let contacts;
+
+    if (localStorage.getItem("contacts")===null){
+      contacts=[];
+    } else{
+      contacts=JSON.parse(localStorage.getItem("contacts"));
+    }
+    return contacts;
+  }
+
+  static addContact(contact){
+    // first store ka waa eber 
+    const contacts = Store.getContacts();
+    contacts.push(contact);
+    localStorage.setItem("contacts",JSON.stringify(contacts));
+  }
+}
+
+document.addEventListener("DOMContentLoaded",UI.displayContacts);
+
 document.querySelector("#contact-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const phone = document.querySelector("#phone-number").value;
@@ -70,6 +87,7 @@ document.querySelector("#contact-form").addEventListener("submit", (e) => {
   } else {
     const contact = new Contact(phone, name, email);
     UI.addContactToList(contact);
+    Store.addContact(contact);
     UI.ShowAlert("Contact added", "success");
     UI.clearFields();
   }
@@ -82,25 +100,8 @@ document.querySelector("#contact-list").addEventListener("click", (e) => {
 
 // Local storege 
 
-class Store {
-  static getContacts(){
-    let contacts;
 
-    if (localStorage.getItem("contacts")===null){
-      contacts=[];
-    } else{
-      contacts=JSON.parse(localStorage.getItem('contacts'));
 
-    }
-    return contacts;
-  }
-  static addContact(contact){
-    const contacts =Store.getContacts();
-    contacts.push(contact);
-    localStorage.setItem("contacts",JSON.stringify(contact));
-  }
-}
 
-document.addEventListener("DOMContentLoaded",UI.displayContacts);
 
 // Local storege 
